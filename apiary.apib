@@ -23,26 +23,26 @@ HOST: http://www.youraccountname.waxlrs.com
                     "criteria": [
                         {
                            "option": "",
-                           "quantity":1,
+                           "quantity": 1,
                            "activity": "a",
                            "combine": "count",
                            "verb": "a",
                            "name": "A",
-                           "completion":true
+                           "completion": true
                         }
                     ],
                     "groupings": {
-                        "":[
+                        "": [
                            "criteria0"
                         ]
                     },
-                    "description":null,
+                    "description": null,
                     "created": "2013-10-13T21:46:39Z",
                     "interval": "anytime",
                     "targets": {
-                        "criteria0":1
+                        "criteria0": 1
                     },
-                    "stacks":false,
+                    "stacks": false,
                     "objectType": "Badge",
                     "descriptions": {
                         "criteria0": "A"
@@ -52,53 +52,53 @@ HOST: http://www.youraccountname.waxlrs.com
                     "name": "Badge Number Two",
                     "id": "2b446713-28f3-4dc1-9z19-36db0869ed21",
                     "type": "competency",
-                    "criteria":[
+                    "criteria": [
                         {
                            "option": "",
-                           "quantity":1,
+                           "quantity": 1,
                            "activity": "http://saltbox.com/tincan/examples/quiz#q3",
                            "combine": "count",
                            "verb": "http://example.org/verbs#answered",
-                           "success":true,
+                           "success": true,
                            "name": "Answered Q3"
                         },
                         {
                            "option": "",
-                           "quantity":1,
+                           "quantity": 1,
                            "activity": "http://saltbox.com/tincan/examples/quiz#q2",
                            "combine": "count",
                            "verb": "http://example.org/verbs#answered",
-                           "success":true,
+                           "success": true,
                            "name": "Answered Q2"
                         },
                         {
                            "option": "",
-                           "completion":true,
+                           "completion": true,
                            "name": "Scored over 70%",
-                           "minimum":0.65,
+                           "minimum": 0.65,
                            "value": "result.score.scaled",
                            "verb": "http://adlnet.gov/expapi/verbs/completed",
                            "combine": "max",
                            "activity": "http://saltbox.com/tincan/examples/quiz",
-                           "quantity":0.7
+                           "quantity": 0.7
                         }
                     ],
                     "groupings": {
-                        "":[
+                        "": [
                            "criteria0",
                            "criteria1",
                            "criteria2"
                         ]
                     },
-                    "description":null,
+                    "description": null,
                     "created": "2013-10-15T22:35:22Z",
                     "interval": "monthly",
                     "targets": {
-                        "criteria2":0.7,
-                        "criteria1":1,
-                        "criteria0":1
+                        "criteria2": 0.7,
+                        "criteria1": 1,
+                        "criteria0": 1
                     },
-                    "stacks":false,
+                    "stacks": false,
                     "objectType": "Badge",
                     "descriptions": {
                         "criteria2": "Scored over 70%",
@@ -306,7 +306,7 @@ the structure will be as follows:
     Retrieved information will have timestamps within this month
     + period (optional, numbers, `31/23/59/59`) ...
     Additional numbers that allow you to further narrow down the time period for statements
-    (e.g., `{day} / {hour}`, `{day} / {hour} /{minute} / {seconds} / {fraction of a second}`)
+    (e.g., `{day} / {hour}` or `{day} / {hour} /{minute} / {seconds} / {fraction of a second}`)
 
 + Request
 
@@ -372,7 +372,7 @@ the structure will be as follows:
         }
 
 # Group Debug Documents [/TCAPI/_api/debug/documents]
-## Debug Documents [GET]
+## Debug Documents: Retrieval [GET]
 talk about and link to the documents api (apiary, xapi)
 resource attributes list
 talk about what these docs are in this context
@@ -399,7 +399,7 @@ talk about what these docs are in this context
                     {
                         "timestamp": "2014-02-18T23:30:26Z",
                         "document_type": "agent_profile",
-                        "identifier": "e22d6f90-2a3f-4b53-8ce5-d307e4c20f4b",
+                        "identifier": "e12d6f90-2a3f-4b53-8ce5-d307e4c20f4b",
                         "agent": {
                             "mbox": "mailto:agent_q@example.com"
                         }
@@ -422,8 +422,8 @@ talk about what these docs are in this context
                 "state": [
                     {
                         "timestamp": "2014-02-18T23:31:26Z",
-                        "activity_id": "http://27ff43e7-fe67-43fd-9c27-52d6381c11d2.example.com/activity",
-                        "identifier": "1ee237p15e68484b9705e33912058a78",
+                        "activity_id": "http://example.com/activity",
+                        "identifier": "1ee237p23e68114b9705e33912058a78",
                         "agent": {
                             "mbox": "mailto:lightningcatsho@example.com"
                         },
@@ -431,10 +431,10 @@ talk about what these docs are in this context
                     },
                     {
                         "timestamp": "2014-02-18T23:31:23Z",
-                        "activity_id": "http://e0af4d5a-c955-4ee9-8d7e-0c9dca3f044c.example.com/activity",
+                        "activity_id": "http://example.com/activity",
                         "identifier": "94702a52b49341f0b3530a2e6fcd6555",
                         "agent": {
-                         "mbox": "mailto:person@0f90499d-036f-4f98-9ecb-dd5d8ad4f2ad.example.com"
+                         "mbox": "mailto:person@.example.com"
                         },
                         "document_type": "state"
                     }
@@ -443,3 +443,47 @@ talk about what these docs are in this context
         }
 
 # Group Debug xAPI [/TCAPI/_api/debug/xapi]
+talk about how helpful this is
+
+## Debug API: Retrieval [GET]
+discuss resource attributes
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200
+
+        {
+            "messages": [
+                {
+                    "status": 400,
+                    "received": "2014-02-21T18:50:09Z",
+                    "parameters": {
+
+                    },
+                    "url": "http://youraccount.waxlrs.com/TCAPI/_api/mastery/agent",
+                    "explanation": "Missing required parameters:\n                agent",
+                    "site": "youraccount",
+                    "api": "agent_mastery",
+                    "verb": "GET",
+                    "id": "fcegb2919b2811e3803f887529182736"
+                },
+                {
+                    "status": 400,
+                    "received": "2014-02-21T18:51:12Z",
+                    "parameters": {
+
+                    },
+                    "url": "http://oneofyoursubaccounts.waxlrs.com/TCAPI/_api/mastery/agent",
+                    "explanation": "Missing required parameters:\n                agent",
+                    "site": "oneofyoursubaccounts",
+                    "api": "agent_mastery",
+                    "verb": "GET",
+                    "id": "2291b99e9b2911e3a54c93028472812"
+                }
+            ],
+            "iterator": "http://youraccount.waxlrs.com/TCAPI/_api/debug/xapi?iterator=longamazonkinesisiterator&sequence=sequencevalue"
+        }
