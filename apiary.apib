@@ -18,73 +18,73 @@ HOST: http://www.youraccountname.waxlrs.com
         {
             "badges": [
                 {
-                    "name":"A Badge",
-                    "id":"07f0eb09-beca-4b49-b5e3-2fe6b9z2f2c3",
-                    "type":"competency",
+                    "name": "A Badge",
+                    "id": "07f0eb09-beca-4b49-b5e3-2fe6b9z2f2c3",
+                    "type": "competency",
                     "criteria": [
                         {
-                           "option":"",
+                           "option": "",
                            "quantity":1,
-                           "activity":"a",
-                           "combine":"count",
-                           "verb":"a",
-                           "name":"A",
+                           "activity": "a",
+                           "combine": "count",
+                           "verb": "a",
+                           "name": "A",
                            "completion":true
                         }
                     ],
-                    "groupings":{
+                    "groupings": {
                         "":[
                            "criteria0"
                         ]
                     },
                     "description":null,
-                    "created":"2013-10-13T21:46:39Z",
-                    "interval":"anytime",
-                    "targets":{
+                    "created": "2013-10-13T21:46:39Z",
+                    "interval": "anytime",
+                    "targets": {
                         "criteria0":1
                     },
                     "stacks":false,
-                    "objectType":"Badge",
-                    "descriptions":{
-                        "criteria0":"A"
+                    "objectType": "Badge",
+                    "descriptions": {
+                        "criteria0": "A"
                     }
                 },
                 {
-                    "name":"Badge Number Two",
-                    "id":"2b446713-28f3-4dc1-9z19-36db0869ed21",
-                    "type":"competency",
+                    "name": "Badge Number Two",
+                    "id": "2b446713-28f3-4dc1-9z19-36db0869ed21",
+                    "type": "competency",
                     "criteria":[
                         {
-                           "option":"",
+                           "option": "",
                            "quantity":1,
-                           "activity":"http://saltbox.com/tincan/examples/quiz#q3",
-                           "combine":"count",
-                           "verb":"http://example.org/verbs#answered",
+                           "activity": "http://saltbox.com/tincan/examples/quiz#q3",
+                           "combine": "count",
+                           "verb": "http://example.org/verbs#answered",
                            "success":true,
-                           "name":"Answered Q3"
+                           "name": "Answered Q3"
                         },
                         {
-                           "option":"",
+                           "option": "",
                            "quantity":1,
-                           "activity":"http://saltbox.com/tincan/examples/quiz#q2",
-                           "combine":"count",
-                           "verb":"http://example.org/verbs#answered",
+                           "activity": "http://saltbox.com/tincan/examples/quiz#q2",
+                           "combine": "count",
+                           "verb": "http://example.org/verbs#answered",
                            "success":true,
-                           "name":"Answered Q2"
+                           "name": "Answered Q2"
                         },
                         {
-                           "option":"",
+                           "option": "",
                            "completion":true,
-                           "name":"Scored over 70%",
+                           "name": "Scored over 70%",
                            "minimum":0.65,
-                           "value":"result.score.scaled",
-                           "verb":"http://adlnet.gov/expapi/verbs/completed",
-                           "combine":"max",
-                           "activity":"http://saltbox.com/tincan/examples/quiz",
+                           "value": "result.score.scaled",
+                           "verb": "http://adlnet.gov/expapi/verbs/completed",
+                           "combine": "max",
+                           "activity": "http://saltbox.com/tincan/examples/quiz",
                            "quantity":0.7
                         }
                     ],
-                    "groupings":{
+                    "groupings": {
                         "":[
                            "criteria0",
                            "criteria1",
@@ -92,19 +92,19 @@ HOST: http://www.youraccountname.waxlrs.com
                         ]
                     },
                     "description":null,
-                    "created":"2013-10-15T22:35:22Z",
-                    "interval":"monthly",
-                    "targets":{
+                    "created": "2013-10-15T22:35:22Z",
+                    "interval": "monthly",
+                    "targets": {
                         "criteria2":0.7,
                         "criteria1":1,
                         "criteria0":1
                     },
                     "stacks":false,
-                    "objectType":"Badge",
-                    "descriptions":{
-                        "criteria2":"Scored over 70%",
-                        "criteria1":"Answered Q2",
-                        "criteria0":"Answered Q3"
+                    "objectType": "Badge",
+                    "descriptions": {
+                        "criteria2": "Scored over 70%",
+                        "criteria1": "Answered Q2",
+                        "criteria0": "Answered Q3"
                     }
                 }
             ]
@@ -236,14 +236,137 @@ While not technically required, when `combine` is set to `max` or `sum` and `val
 # Group Agent Badges
 
 # Group Agent Mastery
-## Agent Mastery [/TCAPI/_api/agent_mastery]
+## Agent Mastery [/TCAPI/_api/agent_mastery{?agent}]
+description of what this is
 
+### Agent Mastery: Retrieval [GET]
++ Parameters
+
+    + agent (required, json, `{"mbox": "mailto:agent@example.com"}`) ... Agent object as defined in xAPI associated with this state
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200
+
+        {
+            "prediction": 0.55,
+            "stdev": 0.25
+        }
+
++ Response 200 (insufficient data)
+
+        {
+            "prediction": null,
+            "stdev": null,
+            "error": "Insufficient score data"
+        }
 
 # Group Agent Objects
 ## Agent Objects [/TCAPI/_api/agents]
 
 # Group Summary
-## Summary [/TCAPI/_api/{?year}/{?month}*period]
+## Summary [/TCAPI/_api/summary/{year}/{month}/{*period}]
+### Summary Resource Attributes
+If at least one statement is found within the provided time frame,
+an object with the following structure will be returned:
+
++ new: Object with properties: verb, statement, actor, activity
+    + verb: Total number of new verbs in time period
+    + actor: Total number of new actors in time period
+    + activity: Total number of new activities in time period
+    + statement: Total number of new statements in time period
++ most_active: Object with properties: verb, actor, activity
+    + verb: List of lists in which the inner lists contain:
+        + An xAPI verb object
+        + The number of occurrences for that verb within statements
+    + actor: List of lists in which the inner lists contain:
+        + An xAPI agent object
+        + The number of occurrences for that verb within statements
+    + activity: List of lists in which the inner lists contain:
+        + An xAPI activity object
+        + The number of occurrences for that activity within statements
+
+If the specified time frame does not find any matching statements,
+the structure will be as follows:
+
++ new
+    + statement
++ most_active
+
+### Summary: Retrieval [GET]
++ Parameters
+
+    + year (required, number, `2013`) ... Retrieved information will have timestamps within this year
+    + month (required, number, `9`) ... Retrieved information will have timestamps within this month
+    + period (optional, numbers, `31/23/59/59`) ...
+    Additional numbers that allow you to further narrow down the time period for statements (e.g., `{day}/{hour}`, `{day}/{hour}/{minute}/{seconds}/{fraction of a second}`)
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200
+
+        {
+            "new": {
+                "verb": 2,
+                "statement": 116,
+                "actor": 2,
+                "activity": 1
+            },
+            "most_active": {
+                "verb": [
+                    [
+                        {
+                            "id": "http://example.org/verbs#answered"
+                        },
+                        116
+                    ],
+                    [
+                        {
+                            "id": "http://adlnet.gov/expapi/verbs/completed"
+                        },
+                        17
+                    ]
+                ],
+                "actor": [
+                    [
+                        {
+                           "mbox": "mailto:xiao@example.com",
+                           "name": "Xiao Xiao"
+                        },
+                        100
+                    ],
+                    [
+                        {
+                           "mbox": "mailto:somebodythatiusedtoknow@example.com",
+                           "name": "Jasper Casper"
+                        },
+                        16
+                    ]
+                ],
+                "activity": [
+                    [
+                        {
+                           "definition": {
+                              "name": {
+                                 "en-US": "Swallow Lading and Airspeed Examination"
+                              }
+                           },
+                           "id": "http://saltbox.com/tincan/examples/quiz",
+                           "objectType": "Activity"
+                        },
+                        116
+                    ]
+                ]
+            }
+        }
 
 # Group Debug Documents [/TCAPI/_api/debug/documents]
 
