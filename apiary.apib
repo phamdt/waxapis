@@ -6,7 +6,6 @@ HOST: http://www.youraccountname.waxlrs.com
 # Group Badges
 ## Badges [/TCAPI/_api/badges]
 ### Badges: Retrieval [GET]
-
 + Request
 
     + Headers
@@ -242,7 +241,8 @@ description of what this is
 ### Agent Mastery: Retrieval [GET]
 + Parameters
 
-    + agent (required, json, `{"mbox": "mailto:agent@example.com"}`) ... Agent object as defined in xAPI associated with this state
+    + agent (required, json, `{"mbox": "mailto:agent@example.com"}`) ...
+    Agent object as defined in xAPI associated with this state
 
 + Request
 
@@ -300,10 +300,13 @@ the structure will be as follows:
 ### Summary: Retrieval [GET]
 + Parameters
 
-    + year (required, number, `2013`) ... Retrieved information will have timestamps within this year
-    + month (required, number, `9`) ... Retrieved information will have timestamps within this month
+    + year (required, number, `2013`) ...
+    Retrieved information will have timestamps within this year
+    + month (required, number, `9`) ...
+    Retrieved information will have timestamps within this month
     + period (optional, numbers, `31/23/59/59`) ...
-    Additional numbers that allow you to further narrow down the time period for statements (e.g., `{day}/{hour}`, `{day}/{hour}/{minute}/{seconds}/{fraction of a second}`)
+    Additional numbers that allow you to further narrow down the time period for statements
+    (e.g., `{day} / {hour}`, `{day} / {hour} /{minute} / {seconds} / {fraction of a second}`)
 
 + Request
 
@@ -369,5 +372,74 @@ the structure will be as follows:
         }
 
 # Group Debug Documents [/TCAPI/_api/debug/documents]
+## Debug Documents [GET]
+talk about and link to the documents api (apiary, xapi)
+resource attributes list
+talk about what these docs are in this context
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200
+
+        {
+            "documents": {
+                "agent_profile": [
+                    {
+                        "timestamp": "2014-02-18T23:31:08Z",
+                        "document_type": "agent_profile",
+                        "identifier": "",
+                        "agent": {
+                         "mbox": "mailto:secret_agent_man@example.com"
+                        }
+                    },
+                    {
+                        "timestamp": "2014-02-18T23:30:26Z",
+                        "document_type": "agent_profile",
+                        "identifier": "e22d6f90-2a3f-4b53-8ce5-d307e4c20f4b",
+                        "agent": {
+                            "mbox": "mailto:agent_q@example.com"
+                        }
+                    }
+                ],
+                "activity_profile": [
+                    {
+                        "timestamp": "2014-02-18T23:31:05Z",
+                        "document_type": "activity_profile",
+                        "identifier": "",
+                        "activity_id": "urn:a:b"
+                    },
+                    {
+                        "timestamp": "2014-02-18T23:30:24Z",
+                        "document_type": "activity_profile",
+                        "identifier": "4dd3abfc-29b8-492f-a5e6-e72a7a9500de",
+                        "activity_id": "urn:a:b"
+                    }
+                ],
+                "state": [
+                    {
+                        "timestamp": "2014-02-18T23:31:26Z",
+                        "activity_id": "http://27ff43e7-fe67-43fd-9c27-52d6381c11d2.example.com/activity",
+                        "identifier": "1ee237p15e68484b9705e33912058a78",
+                        "agent": {
+                            "mbox": "mailto:lightningcatsho@example.com"
+                        },
+                        "document_type": "state"
+                    },
+                    {
+                        "timestamp": "2014-02-18T23:31:23Z",
+                        "activity_id": "http://e0af4d5a-c955-4ee9-8d7e-0c9dca3f044c.example.com/activity",
+                        "identifier": "94702a52b49341f0b3530a2e6fcd6555",
+                        "agent": {
+                         "mbox": "mailto:person@0f90499d-036f-4f98-9ecb-dd5d8ad4f2ad.example.com"
+                        },
+                        "document_type": "state"
+                    }
+                ]
+            }
+        }
 
 # Group Debug xAPI [/TCAPI/_api/debug/xapi]
