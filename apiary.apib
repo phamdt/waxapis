@@ -266,7 +266,34 @@ description of what this is
         }
 
 # Group Agent Objects
-## Agent Objects [/TCAPI/_api/agents]
+## Agent Objects [/TCAPI/_api/agents{?agent}]
+describe me
+how am i different from other agent resource
+
+### Agent Objects: Retrieval [GET]
+notes about how you get what you give when no other info is found
+
++ Parameters
+
+    + agent (required, object, `{"mbox":"mailto:bauer@example.com"}`) ...
+         One or more agent objects as defined in xAPI associated with this state.
+         To request multiple agents in the query string:
+         "agent={"mbox":"mailto:bauer@example.com"}&agent={"mbox":"mailto:almeida@example.com"}"
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200
+
+        [
+            {
+                "mbox": "mailto:a28@example.org",
+                "name": "Alejandro Argo"
+            }
+        ]
 
 # Group Summary
 ## Summary [/TCAPI/_api/summary/{year}/{month}/{*period}]
