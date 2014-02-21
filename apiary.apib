@@ -1,4 +1,250 @@
 FORMAT: 1A
-HOST: http://youraccountname.waxlrs.com
+HOST: http://www.youraccountname.waxlrs.com
 
 # Wax APIs
+
+# Group Badges
+## Badges [/TCAPI/_api/badges]
+### Badges: Retrieval [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200 (application/json)
+
+        {
+            "badges": [
+                {
+                    "name":"A Badge",
+                    "id":"07f0eb09-beca-4b49-b5e3-2fe6b9z2f2c3",
+                    "type":"competency",
+                    "criteria": [
+                        {
+                           "option":"",
+                           "quantity":1,
+                           "activity":"a",
+                           "combine":"count",
+                           "verb":"a",
+                           "name":"A",
+                           "completion":true
+                        }
+                    ],
+                    "groupings":{
+                        "":[
+                           "criteria0"
+                        ]
+                    },
+                    "description":null,
+                    "created":"2013-10-13T21:46:39Z",
+                    "interval":"anytime",
+                    "targets":{
+                        "criteria0":1
+                    },
+                    "stacks":false,
+                    "objectType":"Badge",
+                    "descriptions":{
+                        "criteria0":"A"
+                    }
+                },
+                {
+                    "name":"Badge Number Two",
+                    "id":"2b446713-28f3-4dc1-9z19-36db0869ed21",
+                    "type":"competency",
+                    "criteria":[
+                        {
+                           "option":"",
+                           "quantity":1,
+                           "activity":"http://saltbox.com/tincan/examples/quiz#q3",
+                           "combine":"count",
+                           "verb":"http://example.org/verbs#answered",
+                           "success":true,
+                           "name":"Answered Q3"
+                        },
+                        {
+                           "option":"",
+                           "quantity":1,
+                           "activity":"http://saltbox.com/tincan/examples/quiz#q2",
+                           "combine":"count",
+                           "verb":"http://example.org/verbs#answered",
+                           "success":true,
+                           "name":"Answered Q2"
+                        },
+                        {
+                           "option":"",
+                           "completion":true,
+                           "name":"Scored over 70%",
+                           "minimum":0.65,
+                           "value":"result.score.scaled",
+                           "verb":"http://adlnet.gov/expapi/verbs/completed",
+                           "combine":"max",
+                           "activity":"http://saltbox.com/tincan/examples/quiz",
+                           "quantity":0.7
+                        }
+                    ],
+                    "groupings":{
+                        "":[
+                           "criteria0",
+                           "criteria1",
+                           "criteria2"
+                        ]
+                    },
+                    "description":null,
+                    "created":"2013-10-15T22:35:22Z",
+                    "interval":"monthly",
+                    "targets":{
+                        "criteria2":0.7,
+                        "criteria1":1,
+                        "criteria0":1
+                    },
+                    "stacks":false,
+                    "objectType":"Badge",
+                    "descriptions":{
+                        "criteria2":"Scored over 70%",
+                        "criteria1":"Answered Q2",
+                        "criteria0":"Answered Q3"
+                    }
+                }
+            ]
+        }
+
+### Badges: Create One Badge [POST]
+list out all badge options
+link to xapi when approp
+figure out how to do criteria like parameters
+
+#### Badge Attributes
+describe what this is
+
++ name: Title of your badge. Required. Must be at least one character in length.
++ image: Optional. `image/png` or `image/x-png` file with size less than 256k.
++ description: About your badge. Optional. Defaults to `null`.
+Provided descriptions must be at least one character in length.
++ criteria: See criteria list below
++ type: Optional. Defaults to `competency`. Right now this does nothing.
+Possible values: `badge` or `competency`.
++ interval: How often one can earn the badge. Optional. Defaults to `anytime`.
+Possible values: `anytime`, `yearly`, `monthly`, `daily`.
++ stacks: Whether or not a badge can be earned multiple times. Optional.
+Default to `False`.
+
+##### Criteria Attributes
+talk about multiple criteria
+
++ name: A short phrase meaningful in the context of the badge, such as 'viewing the Solution Selling video'. Required.
++ verb: xAPI verb id signifying the action commited on the specified activity which triggers badgeing. Required.
++ activity: xAPI activity id of activity which can trigger badgeing. Required.
++ completion: Boolean noting whether or not completing activity is required.
+This corresponds with the `result.completion` property in an xAPI statement.
+Optional. Defaults to `any`. Possible values: `any`, `true`, `false`.
++ success: Boolean noting whether or not achieving success is required. Optional. This corresponds with the `result.success` property in an xAPI statement. Possible values: `any`, `true`, `false`.
++ minimum: Minimum scaled score for consideration.
+This float value corresponds with the `result.score` property in an xAPI statement.
+Optional.
++ maximum: Maximum scaled score for consideration. This float value corresponds with the `result.score` property in an xAPI statement. Optional.
++ quantity: The count, sum, or max must be at least this much to complete the criteria. Optional. Defaults to `1`.
++ combine: Method for tallying statements to meet the needed quantity. Optional. Defaults to `count`. Possible values: `count`, `max`, `sum`.
++ value: Part of the xAPI statement to tally, such as result.score.raw (unneeded when the above 'combine' is set to `count`).
+
+
+
+<!-- 
+While not technically required, when `combine` is set to `max` or `sum` and `value` is not set, then there will never be a way to trigger the badge; Wax won't know what value to calculate to a max value or sum will never be counted. -->
+
++ option:
+
+
++ Request (application/json)
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
+    + Body
+
+            {
+                "name": "Smore Maker Supreme",
+                "criteria": [
+                    {
+                        "name": "making smores with the right ingredients",
+                        "verb": "http://example.com/verbs/created",
+                        "activity": "http://example.com/activities/makingsmores",
+                        "completion": true,
+                        "success": true,
+                        "quantity": 10
+                    }
+                ]
+            }
+
++ Response 200
+
+        {
+            "id": "624c86cd-ea13-424a-bbf2-1295e10406de",
+            "name": "Smore Maker Supreme",
+            "description": null,
+            "descriptions": {
+                "criteria0": "making smores with the right ingredients"
+            },
+            "targets": {
+                "criteria0": 10.0
+            },
+            "groupings": {
+                "": ["criteria0"]
+            },
+            "created": "2014-02-21T00:28:13Z",
+            "interval": "anytime",
+            "objectType": "Badge",
+            "criteria": [
+                {
+                    "completion": true,
+                    "name": "making smores with the right ingredients"
+                ,
+                    "success": true,
+                    "verb": "http://example.com/verbs/created",
+                    "combine": "count",
+                    "option": "",
+                    "activity": "http://example.com/activities/makingsmores",
+                    "quantity": 10.0
+                }
+            ],
+            "type": "competency",
+            "stacks": false
+        }
+
++ Response 400 (application/json)
+
+        {
+            "status": "error",
+            "errors": [
+                {
+                    "location": "body",
+                    "name": "name",
+                    "description": "name is missing"
+                },
+                {
+                    "location": "body",
+                    "name": "criteria",
+                    "description": "criteria is missing"
+                }
+            ]
+        }
+
+# Group Badge
+
+# Group Agent Badges
+
+# Group Agent Mastery
+## Agent Mastery [/TCAPI/_api/agent_mastery]
+
+
+# Group Agent Objects
+## Agent Objects [/TCAPI/_api/agents]
+
+# Group Summary
+## Summary [/TCAPI/_api/{?year}/{?month}*period]
+
+# Group Debug Documents [/TCAPI/_api/debug/documents]
+
+# Group Debug xAPI [/TCAPI/_api/debug/xapi]
