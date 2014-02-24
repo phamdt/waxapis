@@ -3,246 +3,324 @@ HOST: http://www.youraccountname.waxlrs.com
 
 # Wax APIs
 
-# Group Badges
-## Badges [/TCAPI/_api/badges]
-### Badges: Retrieval [GET]
+## Group Common Error Responses
+`400 Bad Request`
+- "{your parameter} is not a legal JSON value, but is required to be":
+In addition to checking for typos, make sure this isn't an empty value.
+
+# Group Analyses
+
+## Activity Popularity [/TCAPI/\_api/analyses/activity\_popularity{?activity,descending}]
+### Activity Popularity Resource Attributes
+The returned resource is a list of objects with the properties: key, id, and
+value.
+
++ key: list of four items:
+    + index 0: Total number of statements with the given activity
+    + index 1: Total number of unique agents
+    + index 2: The activity id
+    + index 3: The activity name
++ id: ???
++ value: ???
+
+### Activity Popularity: Retrieval [GET]
+
++ Parameters
+
+    + activity (required, json, `http://example.com/activity/scoring`) ...
+    xAPI activity id
+    + descending (optional, boolean) ... true for most popular and false for
+    least popular
+
 + Request
 
     + Headers
 
             Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
 
-+ Response 200 (application/json)
++ Response 200
 
-        {
-            "badges": [
-                {
-                    "name": "A Badge",
-                    "id": "07f0eb09-beca-4b49-b5e3-2fe6b9z2f2c3",
-                    "type": "competency",
-                    "criteria": [
-                        {
-                           "option": "",
-                           "quantity": 1,
-                           "activity": "a",
-                           "combine": "count",
-                           "verb": "a",
-                           "name": "A",
-                           "completion": true
-                        }
-                    ],
-                    "groupings": {
-                        "": [
-                           "criteria0"
-                        ]
-                    },
-                    "description": null,
-                    "created": "2013-10-13T21:46:39Z",
-                    "interval": "anytime",
-                    "targets": {
-                        "criteria0": 1
-                    },
-                    "stacks": false,
-                    "objectType": "Badge",
-                    "descriptions": {
-                        "criteria0": "A"
-                    }
-                },
-                {
-                    "name": "Badge Number Two",
-                    "id": "2b446713-28f3-4dc1-9z19-36db0869ed21",
-                    "type": "competency",
-                    "criteria": [
-                        {
-                           "option": "",
-                           "quantity": 1,
-                           "activity": "http://saltbox.com/tincan/examples/quiz#q3",
-                           "combine": "count",
-                           "verb": "http://example.org/verbs#answered",
-                           "success": true,
-                           "name": "Answered Q3"
-                        },
-                        {
-                           "option": "",
-                           "quantity": 1,
-                           "activity": "http://saltbox.com/tincan/examples/quiz#q2",
-                           "combine": "count",
-                           "verb": "http://example.org/verbs#answered",
-                           "success": true,
-                           "name": "Answered Q2"
-                        },
-                        {
-                           "option": "",
-                           "completion": true,
-                           "name": "Scored over 70%",
-                           "minimum": 0.65,
-                           "value": "result.score.scaled",
-                           "verb": "http://adlnet.gov/expapi/verbs/completed",
-                           "combine": "max",
-                           "activity": "http://saltbox.com/tincan/examples/quiz",
-                           "quantity": 0.7
-                        }
-                    ],
-                    "groupings": {
-                        "": [
-                           "criteria0",
-                           "criteria1",
-                           "criteria2"
-                        ]
-                    },
-                    "description": null,
-                    "created": "2013-10-15T22:35:22Z",
-                    "interval": "monthly",
-                    "targets": {
-                        "criteria2": 0.7,
-                        "criteria1": 1,
-                        "criteria0": 1
-                    },
-                    "stacks": false,
-                    "objectType": "Badge",
-                    "descriptions": {
-                        "criteria2": "Scored over 70%",
-                        "criteria1": "Answered Q2",
-                        "criteria0": "Answered Q3"
-                    }
-                }
-            ]
-        }
+        [
+            {
+                "key": [
+                    1,
+                    1,
+                    "http://example.com/activity",
+                    "Activity!"
+                ],
+                "id": "LDLmKDwePnetZy-vR-WaMZ",
+                "value": null
+            },
+            {
+                "key": [
+                    1,
+                    1,
+                    "http://example.com/activity",
+                    "Activity!"
+                ],
+                "id": "Ma6ShA3P86EY9qlYN__qnZ",
+                "value": null
+            }
+        ]
 
-### Badges: Create One Badge [POST]
-list out all badge options
-link to xapi when approp
-figure out how to do criteria like parameters
+## Basic Results [/TCAPI/\_api/analyses/basic_results{?activity}]
+In order to store information about measured outcomes, the optional
+["result" property](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#result)
+is provided as part of an xAPI statement. While the value of this property
+refers to one particular result for an agent, Basic Results provides all results
+for a particular activity which is further organized by agent.
 
-#### Badge Attributes
-describe what this is
+### Notes
+Even though the xAPI standard has a "response" property within the "result"
+property of an xAPI statement, we exclude it here and instead provide responses
+separately in its own resource as seen below.
 
-+ name: Title of your badge. Required. Must be at least one character in length.
-+ image: Optional. `image/png` or `image/x-png` file with size less than 256k.
-+ description: About your badge. Optional. Defaults to `null`.
-Provided descriptions must be at least one character in length.
-+ criteria: See criteria list below
-+ type: Optional. Defaults to `competency`. Right now this does nothing.
-Possible values: `badge` or `competency`.
-+ interval: How often one can earn the badge. Optional. Defaults to `anytime`.
-Possible values: `anytime`, `yearly`, `monthly`, `daily`.
-+ stacks: Whether or not a badge can be earned multiple times. Optional.
-Default to `False`.
+This resource provides information
+to the "Results Summary" in the WaxLRS interface.
 
-##### Criteria Attributes
-talk about multiple criteria
++ Basic Results Resource Attributes
+    + list of objects with the following properties:
+        + key: list with the following items
+            + index 0: agent
+        + value: object with the following optional properties
+            + scaled: list of scaled scores
+            + raw: list of raw scores
+            + completion: list of booleans indicating completion of activity
+            + success: list of booleans indicating success in activity
 
-+ name: A short phrase meaningful in the context of the badge, such as 'viewing the Solution Selling video'. Required.
-+ verb: xAPI verb id signifying the action commited on the specified activity which triggers badgeing. Required.
-+ activity: xAPI activity id of activity which can trigger badgeing. Required.
-+ completion: Boolean noting whether or not completing activity is required.
-This corresponds with the `result.completion` property in an xAPI statement.
-Optional. Defaults to `any`. Possible values: `any`, `true`, `false`.
-+ success: Boolean noting whether or not achieving success is required. Optional. This corresponds with the `result.success` property in an xAPI statement. Possible values: `any`, `true`, `false`.
-+ minimum: Minimum scaled score for consideration.
-This float value corresponds with the `result.score` property in an xAPI statement.
-Optional.
-+ maximum: Maximum scaled score for consideration. This float value corresponds with the `result.score` property in an xAPI statement. Optional.
-+ quantity: The count, sum, or max must be at least this much to complete the criteria. Optional. Defaults to `1`.
-+ combine: Method for tallying statements to meet the needed quantity. Optional. Defaults to `count`. Possible values: `count`, `max`, `sum`.
-+ value: Part of the xAPI statement to tally, such as result.score.raw (unneeded when the above 'combine' is set to `count`).
+### Basic Results: Retrieval [GET]
 
++ Parameters
 
+    + activity (required, json, `http://example.com/activity/scoring`) ...
+    xAPI activity id
 
-<!-- 
-While not technically required, when `combine` is set to `max` or `sum` and `value` is not set, then there will never be a way to trigger the badge; Wax won't know what value to calculate to a max value or sum will never be counted. -->
-
-+ option:
-
-
-+ Request (application/json)
++ Request
 
     + Headers
 
             Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
 
-    + Body
++ Response 200
 
+        [
             {
-                "name": "Smore Maker Supreme",
-                "criteria": [
-                    {
-                        "name": "making smores with the right ingredients",
-                        "verb": "http://example.com/verbs/created",
-                        "activity": "http://example.com/activities/makingsmores",
-                        "completion": true,
-                        "success": true,
-                        "quantity": 10
-                    }
-                ]
-            }
+                "key": [{"mbox": "thisactivitywashard@example.com"}],
+                "value": {
+                    "completion": true,
+                    "success": false
+                }
+            },
+            {
+                "key": [{"mbox": "irockedthis@example.com"}],
+                "value": {
+                    "completion": true,
+                    "success": true
+                }
+            },
+        ]
+
+## Question Analysis [/TCAPI/\_api/analyses/questionanalysis{?activity}]
+### Question Analysis: Retrieval [GET]
+
++ Parameters
+
+    + activity (required, json, `http://example.com/activity/scoring`) ...
+    xAPI activity id
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200
+
+## Responses [/TCAPI/\_api/analyses/responses{?activity}]
+The "response" property is an optional property within the
+["result" property](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#result)
+which allows for arbitrary text appropriate to the activity to be recorded.
+One example is a free response to an open ended survey question. The resource
+provides information to the "Response Tabulation" in the WaxLRS interface.
+
+### Responses Attributes
+
++ list of response objects with the following properties:
+    + key: list of two items
+        + index 0: agent
+        + index 1: the timestamp of the response
+    + value: the actual response text
+
+### Responses: Retrieval [GET]
+
++ Parameters
+
+    + activity (required, json, `http://example.com/activity/scoring`) ...
+    xAPI activity id
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200
+
+        [
+            {
+                "key": [
+                    {"mbox": "iLoveBlueBooks@example.com"},
+                    "2013-05-18T05:32:34.804Z"
+                ],
+                "value": "this is what i decided to write as my response"
+            },
+            {
+                "key": [
+                    {"mbox": "iHateBlueBooks@example.com"},
+                    "2013-06-18T05:32:34.804Z"
+                ],
+                "value": "ah! writer's block!"
+            },
+        ]
+
+## Scorechart [/TCAPI/\_api/analyses/scorechart{?activity}]
+Like other referrences to 'score', scores correspond to the
+[result.score property](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#result)
+statement property. This resource provides a distribution of all scores for a
+given activity. As expected, this Scorechart resource provides information to
+the "Scorechart" report in the WaxLRS interface.
+
+### Scorechart Resource Attributes
+
++ raw: object with raw scores and their total occurrences as key value pairs
++ scaled: object with scaled scores and their total occurrences as key value
+pairs
+
+### Scorechart: Retrieval [GET]
+
++ Parameters
+
+    + activity (required, json, `http://example.com/activity/scoring`) ...
+    xAPI activity id
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
 
 + Response 200
 
         {
-            "id": "624c86cd-ea13-424a-bbf2-1295e10406de",
-            "name": "Smore Maker Supreme",
-            "description": null,
-            "descriptions": {
-                "criteria0": "making smores with the right ingredients"
-            },
-            "targets": {
-                "criteria0": 10.0
-            },
-            "groupings": {
-                "": ["criteria0"]
-            },
-            "created": "2014-02-21T00:28:13Z",
-            "interval": "anytime",
-            "objectType": "Badge",
-            "criteria": [
-                {
-                    "completion": true,
-                    "name": "making smores with the right ingredients"
-                ,
-                    "success": true,
-                    "verb": "http://example.com/verbs/created",
-                    "combine": "count",
-                    "option": "",
-                    "activity": "http://example.com/activities/makingsmores",
-                    "quantity": 10.0
-                }
-            ],
-            "type": "competency",
-            "stacks": false
+          "raw": {},
+          "scaled": {
+            "0.3185880953164357": 1,
+            "0.12008526250184093": 1,
+            "0.9296901591327735": 1,
+            "0.8510739693969134": 1
+          }
         }
 
-+ Response 400 (application/json)
+## Timeline [/TCAPI/\_api/analyses/timeline{?activity}]
+The Timeline resource provides a way to find the number of occurrences for an
+activity during various time frames.
 
-        {
-            "status": "error",
-            "errors": [
-                {
-                    "location": "body",
-                    "name": "name",
-                    "description": "name is missing"
-                },
-                {
-                    "location": "body",
-                    "name": "criteria",
-                    "description": "criteria is missing"
+### Timeline Resource Attributes
+The resource returns a list of objects with the following properties:
+
++ key: a list in which each item corresponds to part of a single date
+    + index 0: the year
+    + index 1: the month
+    + index 2: the day
++ value: the number of occurrences of this activity during the specified
+time frame
+
+### Timeline: Retrieval [GET]
+
++ Parameters
+
+    + activity (required, json, `http://example.com/activity/scoring`) ...
+    xAPI activity id
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200
+
+        [
+            {
+                "key": [
+                    2012,
+                    9,
+                    12
+                ],
+                "value": 200
+            },
+            {
+                "key": [
+                    2013,
+                    4,
+                    22
+                ],
+                "value": 100
+            }
+        ]
+
+## Verb Cloud [/TCAPI/\_api/analyses/verbcloud{?activity}]
+The Verb Cloud provides the total number of occurrences of verbs for the given
+activity.
+
+### Verb Cloud: Retrieval [GET]
+
++ Parameters
+
+    + activity (required, json, `http://example.com/activity/scoring`) ...
+    xAPI activity id
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200
+
+        [
+            {
+                "key": [
+                    "urn:verb:completed"
+                ],
+                "value": {
+                    "display": {},
+                    "total": 2935
                 }
-            ]
-        }
-
-# Group Badge
-
-# Group Agent Badges
+            }
+        ]
 
 # Group Agent Mastery
 ## Agent Mastery [/TCAPI/_api/agent_mastery{?agent}]
-description of what this is
+???????????????
+'Mastery' refers to the Saltbox Mastery Index (SMI) which summarizes an
+individual's overall performance relative to peers. For example, an SMI score of 35%
+indicates that the individual performed better than approximately 35% of the
+individual's peers included in evaluation. Performance, in this case, refers to
+achievement in scorable activities as found in the `result.score` property
+of statements.
+
+### Agent Mastery Resource Attributes
+
++ prediction: This is the SMI score formatted in decimals
++ stdev: The standard deviation
 
 ### Agent Mastery: Retrieval [GET]
+
 + Parameters
 
     + agent (required, json, `{"mbox": "mailto:agent@example.com"}`) ...
-    Agent object as defined in xAPI associated with this state
+    Agent object, as defined in xAPI, associated with this state
 
 + Request
 
@@ -267,16 +345,37 @@ description of what this is
 
 # Group Agent Objects
 ## Agent Objects [/TCAPI/_api/agents{?agent}]
-describe me
-how am i different from other agent resource
+A list of full xAPI agents where 'full' means that an agent has the 'name'
+property if a name was ever associated (via statements) with the agent's inverse
+functional identifier (mbox, mbox_sha1sum, openid, account).
+
+### TCAPI/_api/agents vs. TCAPI/agents
+This resource, `TCAPI/_api/agents`, is different from our `TCAPI/agents`
+resource which returns a list of Agent objects (regardless of being empty or
+not) as opposed to being restricted to a single Person object. Among the
+reasons you might use this resource is to retrieve the corresponding name for a
+a list of agents when the only information you have is each agent's mbox
+(email). #better example?
 
 ### Agent Objects: Retrieval [GET]
-notes about how you get what you give when no other info is found
+#### Notes
+Assuming properly formed parameters, this resource will, in the very least,
+return what you provide. For example, if you provide the agent parameter,
+`{"mbox":"mailto:nonexistent@example.org"}`, even when this agent doesn't exist in
+WaxLRS the response would still be:
+
+        [
+            {
+                "mbox": "mailto:nonexistent@example.org"
+            }
+        ]
+
+??? why do we do this again?
 
 + Parameters
 
     + agent (required, object, `{"mbox":"mailto:bauer@example.com"}`) ...
-         One or more agent objects as defined in xAPI associated with this state.
+         One or more agent objects, as defined by xAPI, associated with this state.
          To request multiple agents in the query string:
          "agent={"mbox":"mailto:bauer@example.com"}&agent={"mbox":"mailto:almeida@example.com"}"
 
@@ -297,15 +396,20 @@ notes about how you get what you give when no other info is found
 
 # Group Summary
 ## Summary [/TCAPI/_api/summary/{year}/{month}/{*period}]
-### Summary Resource Attributes
+The Summary resource is a helpful tool to find high-level information about
+actors, verbs, activities, and statements within a specified time frame.
+
+#### Notes
 If at least one statement is found within the provided time frame,
 an object with the following structure will be returned:
 
+#### Summary Resource Attributes
+
 + new: Object with properties: verb, statement, actor, activity
-    + verb: Total number of new verbs in time period
-    + actor: Total number of new actors in time period
-    + activity: Total number of new activities in time period
-    + statement: Total number of new statements in time period
+    + verb: Total number of new verbs in time frame
+    + actor: Total number of new actors in time frame
+    + activity: Total number of new activities in time frame
+    + statement: Total number of new statements in time frame
 + most_active: Object with properties: verb, actor, activity
     + verb: List of lists in which the inner lists contain:
         + An xAPI verb object
@@ -317,12 +421,9 @@ an object with the following structure will be returned:
         + An xAPI activity object
         + The number of occurrences for that activity within statements
 
-If the specified time frame does not find any matching statements,
-the structure will be as follows:
-
-+ new
-    + statement
-+ most_active
+If the specified time frame does not find any matching statements, the structure
+will be as seen as it is displayed in the`Response 200 (no statements)` example
+below.
 
 ### Summary: Retrieval [GET]
 + Parameters
@@ -332,8 +433,9 @@ the structure will be as follows:
     + month (required, number, `9`) ...
     Retrieved information will have timestamps within this month
     + period (optional, numbers, `31/23/59/59`) ...
-    Additional numbers that allow you to further narrow down the time period for statements
-    (e.g., `{day} / {hour}` or `{day} / {hour} /{minute} / {seconds} / {fraction of a second}`)
+    Additional numbers that allow you to further narrow down the time frame for
+    statements
+    (e.g., `{day} / {hour}` or `{day} / {hour} /{minute} / {seconds})
 
 + Request
 
@@ -398,11 +500,41 @@ the structure will be as follows:
             }
         }
 
++ Response 200 (no statements)
+
+        {
+            "new" {
+                "statement": 0
+            },
+            "most_active": {}
+        }
+
 # Group Debug Documents [/TCAPI/_api/debug/documents]
 ## Debug Documents: Retrieval [GET]
-talk about and link to the documents api (apiary, xapi)
-resource attributes list
-talk about what these docs are in this context
+This API is intended for internal use by Saltbox but is not restricted to
+Saltbox.
+
+Debug documents are the most recent (within 24 hours) documents stored by the
+[Document APIs](http://docs.waxtcapi.apiary.io/#documentapis). This is useful
+because the Document APIs cannot retrieve documents by timestamp alone. For
+example, the
+[Agent Profile API](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#agentprofapi)
+requires an agent parameter when retrieving any
+documents and then optionally the `since` parameter can be included. As such,
+the debug documents provide the quickest access to recently stored documents.
+This in turn allows you to perform any debugging related to documents if needed.
+
+In the example below, one of the agent_profile documents has the id set to
+"e12d6f90-2a3f-4b53-8ce5-d307e4c20f4b". Using this id and its corresponding
+agent as parameters, you can use the
+[Agent Profile API](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#agentprofapi)
+to retrieve the specific document.
+
+### Debug Document Attributes
+As seen below, this resource returns an object with the single "documents"
+property. Within this property's value, you can find a list of all the
+documents that fall under the three different document types: agent profile,
+activity profile, and state.
 
 + Request
 
@@ -420,7 +552,7 @@ talk about what these docs are in this context
                         "document_type": "agent_profile",
                         "identifier": "",
                         "agent": {
-                         "mbox": "mailto:secret_agent_man@example.com"
+                            "mbox": "mailto:secret_agent_man@example.com"
                         }
                     },
                     {
@@ -461,7 +593,7 @@ talk about what these docs are in this context
                         "activity_id": "http://example.com/activity",
                         "identifier": "94702a52b49341f0b3530a2e6fcd6555",
                         "agent": {
-                         "mbox": "mailto:person@.example.com"
+                            "mbox": "mailto:person@example.com"
                         },
                         "document_type": "state"
                     }
@@ -469,11 +601,38 @@ talk about what these docs are in this context
             }
         }
 
-# Group Debug xAPI [/TCAPI/_api/debug/xapi]
-talk about how helpful this is
+# Group Debug xAPI [/TCAPI/_api/debug/xapi{?iterator,sequence}]
+This API is intended for internal use by Saltbox but is not restricted to
+Saltbox.
 
-## Debug API: Retrieval [GET]
-discuss resource attributes
+The Debug xAPI API allows you to retrieve the most recent (within 24 hours)
+errors related to the various xAPI APIs (Statement and Document APIs).
+
+## Debug xAPI: Retrieval [GET]
+### Debug xAPI Resource Attributes
+
++ messages
+    + status: the HTTP responsen code
+    + received: timestamp of when the error occurred
+    + parameters: an object of parameters sent as part of the request to the API
+    + url: the API endpoint
+    + explanation: The error message displayed to the API user, which is different than what is logged to Saltbox logging services
+    + site: the site/account name of the person using this API
+    + api: the name of the API being examined
+    + verb: the HTTP verb
+    + id: ?
++ iterator: The Amazon Kinesis iterator that iterates the stream of errors
+
+### Notes
+While this API can take the `iterator` and `sequence` parameters as described
+below. These typically will not be needed.
+
++ Parameters
+
+    + iterator (optional, string) ... Kinesis Iterator found by GET-ing the
+    resource without parameters
+    + sequence (optional, string) ... Sequence value found as a query parameter
+    in the returned in the iterator url
 
 + Request
 
