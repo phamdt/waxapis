@@ -19,12 +19,12 @@ While Apiary lists the API host as `http://www.waxlrs.com/`, each of the endpoin
 ### Authentication
 Note that each of the examples below require the usage of basic authorization as part of the request.
 
+# Group Analyses
+
 ## Group Common Error Responses
 `400 Bad Request`
 - "{your parameter} is not a legal JSON value, but is required to be":
 In addition to checking for typos, make sure this isn't an empty value.
-
-# Group Analyses
 
 ## Activity Popularity [/TCAPI/\_api/analyses/activity\_popularity{?descending}]
 Activity Popularity allows you to determine the most and least popular
@@ -107,7 +107,7 @@ to the "Results Summary" in the WaxLRS interface.
 
 + Parameters
 
-    + activity (required, json, `http://example.com/activity/scoring`) ...
+    + activity (required, string, `http://example.com/activity/scoring`) ...
     xAPI activity id
 
 + Request
@@ -136,11 +136,26 @@ to the "Results Summary" in the WaxLRS interface.
         ]
 
 ## Question Analysis [/TCAPI/\_api/analyses/questionanalysis{?activity}]
+Question Analysis analyzes the quality of questions and determines if they are conducive to the success of an assessment.
+
+### Question Analysis Resource Attributes
+This resource returns a list of objects with the following properties:
+
++ key: a list with the following items:
+    + index 0: the activity id
+    + index 1: the activity display
++ value: a list of the following items
+    + index 0
+    + index 1
+    + index 2
+    + index 3
+    + index 4
+
 ### Question Analysis: Retrieval [GET]
 
 + Parameters
 
-    + activity (required, json, `http://example.com/activity/scoring`) ...
+    + activity (required, string, `http://example.com/activity/scoring`) ...
     xAPI activity id
 
 + Request
@@ -150,6 +165,36 @@ to the "Results Summary" in the WaxLRS interface.
             Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
 
 + Response 200
+
+        [
+            {
+                "key": [
+                    "http://mylms.example.com/courses/sellingxyz#0",
+                    "What commitment objective would you set for this call?"
+                ],
+                "value": [
+                    6.306691373577208,
+                    10,
+                    4.5186298820169934,
+                    10,
+                    6.9725856602075895
+                ]
+            },
+            {
+                "key": [
+                    "http://mylms.example.com/courses/sellingxyz#1",
+                    "Was this person a decision maker?"
+                ],
+                "value": [
+                    9.265942360824935,
+                    14,
+                    1.559378894769265,
+                    6,
+                    6.9725856602075895
+                ]
+            }
+        ]
+
 
 ## Responses [/TCAPI/\_api/analyses/responses{?activity}]
 The "response" property is an optional property within the
@@ -170,7 +215,7 @@ This resource returns a list of response objects with the following properties:
 
 + Parameters
 
-    + activity (required, json, `http://example.com/activity/scoring`) ...
+    + activity (required, string, `http://example.com/activity/scoring`) ...
     xAPI activity id
 
 + Request
@@ -216,7 +261,7 @@ pairs
 
 + Parameters
 
-    + activity (required, json, `http://example.com/activity/scoring`) ...
+    + activity (required, string, `http://example.com/activity/scoring`) ...
     xAPI activity id
 
 + Request
@@ -264,7 +309,7 @@ Only one of the parameters below can be used.
 
 + Parameters
 
-    + activity (required, json, `http://example.com/activity/scoring`) ...
+    + activity (required, string, `http://example.com/activity/scoring`) ...
     xAPI activity id
 
 + Request
@@ -548,7 +593,7 @@ below.
             "most_active": {}
         }
 
-# Group Debug Documents
+# Group Debugging
 ## Debug Documents [/TCAPI/_api/debug/documents]
 ### Debug Documents: Retrieval [GET]
 This API is intended for internal use by Saltbox but is not restricted to
@@ -641,7 +686,6 @@ activity profile, and state.
             }
         }
 
-# Group Debug xAPI
 ## Debug xAPI [/TCAPI/_api/debug/xapi{?iterator,sequence}]
 This API is intended for internal use by Saltbox but is not restricted to
 Saltbox.
@@ -673,7 +717,7 @@ below. These typically will not be needed and are set by Amazon.
     + iterator (optional, string) ... Kinesis Iterator found by GET-ing this
     resource without parameters
     + sequence (optional, string) ... Sequence value found as a query parameter
-    in the returned in the iterator url
+    in the returned iterator url
 
 + Request
 
@@ -713,4 +757,228 @@ below. These typically will not be needed and are set by Amazon.
                 }
             ],
             "iterator": "http://youraccount.waxlrs.com/TCAPI/_api/debug/xapi?iterator=longamazonkinesisiterator&sequence=sequencevalue"
+        }
+
+# Group Accounts Management
+The resources below are part of our Accounts Management API which allow for
+creating and retrieving information about subaccounts. Subaccounts can help you
+segment your data in a way that corresponds to your organization. For example,
+company, 'A', may have 32 departments. Company 'A' can have one WaxLRS account
+and then create 32 subaccounts, one for each department. All billing related
+processes and information are handled through the main account.
+
+## Subaccounts
+### Description of Usual Server Responses
+
+`200 OK` \- A successful request: you were able to retrieve subaccounts or
+create a new one
+`400 Bad Request` \- The request could not be understood or was missing required
+information
+- "An email is required to request a password reset link but was not provided"
+- "Malformed reset token", this may have resulted from copy and pasting the
+password reset link incorrectly
+`403 Forbidden` \- This is most likely because the reset password token is
+expired
+- "Expired reset token"
+`404 Not Found` \- make sure you wrote out the endpoint/link correctly,
+otherwise you may be requesting a subaccount that does not exist
+- "Subaccount, {subaccountsitename}, does not exist."
+- "Only letters and numbers are allowed", this message occurs when creating a
+subaccount with an invalid site name
+- `409 Conflict` \- You are attempting to create a subaccount with a site name
+that already exists
+- "That name is already in use"
+
+### Subaccounts [/TCAPI/_api/accounts/subaccounts]
+### Retrieve subaccounts [GET]
+Retrieve list of all subaccounts with information for site name, url, basic
+credentials url, and OAuth credentials url
+
++ Request
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200 (application/json)
+
+        [
+            {
+                "site": "yearnin4elearnin",
+                "url": "https://yearnin4elearnin.waxlrs.com",
+                "basic\_credentials": "https://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/yearnin4elearnin/credentials/basic",
+                "oauth\_credentials": "https://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/yearnin4elearnin/credentials/oauth"
+            },
+            {
+                "site": "readersareleaders",
+                "url": "https://readersareleaders.waxlrs.com",
+                "basic\_credentials": "https://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/readersareleaders/credentials/basic",
+                "oauth\_credentials": "http://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/readersareleaders/credentials/oauth"
+            }
+        ]
+
+
+### Create new subaccount [POST]
+Create new subaccount by posting your desired subaccount name and corresponding
+email
+
++ Request (application/json)
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
+    + Body
+
+            {
+                "site": "yearnin4elearnin",
+                "email": "iHearteLearnin143@example.com"
+            }
+
+
++ Response 200 (application/json)
+
+        {
+            "site": "yearnin4elearnin",
+            "url": "http://yearnin4elearnin.waxlrs.com",
+            "basic_credentials": "http://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/yearnin4elearnin/credentials/basic",
+            "oauth_credentials": "http://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/yearnin4elearnin/credentials/oauth"
+        }
+
+## Subaccount [/TCAPI/_api/accounts/subaccounts/{subaccountsitename}]
+### Retrieve subaccount [GET]
+Retrieve one subaccount with information for site name, url, basic credentials
+url, and OAuth credentials url
+
++ Parameters
+
+    +   subaccountsitename (required, string, `yearnin4elearnin`) ...
+    name of subaccount
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200 (application/json)
+
+        {
+            "site": "yearnin4elearnin",
+            "url": "http://yearnin4elearnin.waxlrs.com",
+            "basic_credentials": "http://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/yearnin4elearnin/credentials/basic",
+            "oauth_credentials": "http://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/yearnin4elearnin/credentials/oauth"
+        }
+
+## Basic Credentials [/TCAPI/_api/accounts/subaccounts/{subaccountsitename}/credentials/basic]
+### Retrieve basic credentials [GET]
+Retrieve all basic credentials for specified subaccount
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200 (application/json)
+
+        {
+            "basic_credentials": [
+                {
+                    "login": "oTSjEY4rnCqQ9JwkIy03",
+                    "password": "vGq7DZViN0CwbXMiGMqT",
+                    "created": "2013-09-23T20:41:44.316602Z"
+                },
+                {
+                    "login": "akcqNUKKOMzG8WwaZISv",
+                    "password": "oyBnq2urPEh0EF5QzJZ8",
+                    "created": "2013-09-25T20:41:12.205101Z"
+                }
+            ]
+        }
+
+### Generate basic credential [POST]
+Generate basic credential for specified subaccount
+
++ Request
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200 (application/json)
+
+        {
+            "login": "oTSjEY4rnCqQ9JwkIy03",
+            "password": "vGq7DZViN0CwbXMiGMqT",
+            "created": "2013-09-23T20:41:44.316602Z"
+        }
+
+## OAuth Credentials [/TCAPI/_api/accounts/subaccounts/{subaccountsitename}/credentials/oauth]
+### Retrieve OAuth credentials [GET]
+Retrieve all OAuth credentials for specified subaccount
+
++ Request
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200 (application/json)
+
+        {
+            "oauth_credentials": [
+                {
+                    "consumer\_key": "WGQ17ukZHstLfNo1HwXT",
+                    "secret\_key": "iSe4BOHtByYWXyuZWxFx",
+                    "created": "2013-09-23T20:41:44.316602Z"
+                },
+                {
+                    "consumer\_key": "9gMaMUrwEeWCLEwwcYCm",
+                    "secret\_key": "KSRNCMZ6QUKLuJlpjyge",
+                    "created": "2013-09-23T20:43:09.311111Z"
+                }
+            ]
+        }
+
+
+### Generate OAuth credential [POST]
+Generate OAuth credential for specified subaccount
+
++ Request
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200 (application/json)
+
+        {
+            "consumer\_key": "WGQ17ukZHstLfNo1HwXT", "secret\_key": "iSe4BOHtByYWXyuZWxFx", "created": "2013-09-23T20:41:44.316602Z"
+        }
+
+## Site Admins [/TCAPI/\_api/accounts/subaccounts/{subaccountsitename}/reset_password?email={email}]
+When a subaccount user has lost or forgotten their password, this request can be
+used to generate a reset password link. Each link is unique to the email that is
+sent as a parameter in the request. Upon visiting this link, a user can enter a
+new password into the browser. The reset password link expires after 24 hours.
+
+This endpoint can also be used to create a user for the subaccount. Upon using
+this endpoint, if Wax does not recognize the email as part of the subaccount's
+associated list of users, a new user account will be created.
+
+### Generate Reset Password Link [POST]
+Generate reset password link for specified subaccount
+
++ Parameters
+
+    + email (required, string, `xAPI4Life@example.com`) ... email of user who
+    needs a user account generated or who has forgotten/lost password
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
+
++ Response 200 (application/json)
+
+        {
+            "reset_link": "https://yearnin4elearnin.waxlrs.com/reset?token=WyJleGFtcGxlIiwiYmF0ZmxlY2tAZXhhbXBsZS5jb20iXQ.BSJvDg.WJzyeRFbOTjkr37j6W2a8lSRisE"
         }
