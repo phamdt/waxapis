@@ -2,7 +2,7 @@ FORMAT: 1A
 HOST: http://www.youraccountname.waxlrs.com
 
 # Wax APIs
-Welcome to Wax API's!
+Welcome to Wax APIs!
 
 The resources described here are categorized in to three groups:
 
@@ -304,7 +304,7 @@ time frame
 
 ### Timeline: Retrieval [GET]
 #### Notes
-Only one of the parameters below can be used.
+Only one of the listed parameters can be used in a single query.
 
 + Parameters
 
@@ -312,11 +312,6 @@ Only one of the parameters below can be used.
     xAPI activity id
     + agent (optional, json) ... xAPI agent object
     + verb (optional, string, `urn:verb:completed`) ... xAPI verb id
-
-+ Parameters
-
-    + activity (required, string, `http://example.com/activity/scoring`) ...
-    xAPI activity id
 
 + Request
 
@@ -359,7 +354,7 @@ This resource provides a list of objects with the following properties:
 
 ### Verb Cloud: Retrieval [GET]
 #### Notes
-Only one of the parameters below can be used.
+Only one of the listed parameters can be used in a single query.
 
 + Parameters
 
@@ -952,12 +947,25 @@ profile, activity profile, and state during the last 24 hours.
 
 ## Debug xAPI [/TCAPI/_api/debug/xapi{?iterator,sequence}]
 The Debug xAPI API allows you to retrieve the most recent (within 24 hours)
-errors related to the various xAPI APIs (Statement and Document APIs).
+errors resulting from calls to the Experience API.
+
+### On Iteration
+Below, you will see that `id` is one of the message properties. This provides an
+easy way of removing duplicates when the client reads through the stream
+multiple times since the iterators are only good for less than an hour, you have
+to start from the beginning if the iterator expires.
+
+If (on the backend) the iterator expires, the iterator link the client gets via
+the API will be an iterator link that points back to the beginning of the
+stream. This ensures that there will always be an iterator link in the API
+response that will let the client get more records. However, this also means
+that the client may get duplicate records and thus need for the `id` property.
+
 
 ### Debug xAPI Attributes
 
 + messages
-    + status: the HTTP responsen code
+    + status: the HTTP response code
     + received: timestamp of when the error occurred
     + parameters: an object of parameters sent as part of the request to the API
     + url: the API endpoint
@@ -965,8 +973,8 @@ errors related to the various xAPI APIs (Statement and Document APIs).
     different than what is logged to Saltbox logging services
     + site: the site/account name of the person using this API
     + api: the name of the API being examined
-    + verb: the HTTP verb
-    + id: ?
+    + verb: the HTTP verb (e.g. GET, POST)
+    + id: the message's unique identifier (uuid with no dashes)
 + iterator: The Amazon Kinesis iterator that iterates the stream of errors
 
 ### Notes
