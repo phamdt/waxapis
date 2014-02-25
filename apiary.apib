@@ -2,35 +2,39 @@ FORMAT: 1A
 HOST: http://www.youraccountname.waxlrs.com
 
 # Wax APIs
-The resources described here are meant to provide analysis of the data submitted
-via the core functionality of the Experience API as implemented by WaxLRS. This
-includes analysis of information found in statements as well as information
-found in the Document APIs.
+Welcome to Wax API's!
+
+The resources described here are categorized in to three groups:
+
+1. Analyses: Resources meant to provide analysis of the statements submitted
+via the core functionality of the Experience API as implemented by WaxLRS.
+2. Accounts Management: Resources to create and retrieve information about
+subaccounts
+3. Debugging: Resources originally intended for internal Saltbox use to debug
+recent errors
 
 ## Questions?
 We hope you find this documentation useful.
-For any questions or feedback feel free to use the comments feature found in each HTTP method or contact us through our [support page]("http://saltbox.uservoice.com/").
+For any questions or feedback feel free to use the comments feature found in
+each HTTP method or contact us through our
+[support page](http://saltbox.uservoice.com/).
 
 ## Group General Information
-### Host
-While Apiary lists the API host as `http://www.waxlrs.com/`, each of the endpoints below must include the main account in the url as follows:
-`https://mainaccountname.waxlrs.com/`
-
 ### Authentication
-Note that each of the examples below require the usage of basic authorization as part of the request.
+Note that each of the examples below require the usage of basic authorization as
+part of the request.
 
 # Group Analyses
-
-## Group Common Error Responses
+## Common Error Responses
 `400 Bad Request`
 - "{your parameter} is not a legal JSON value, but is required to be":
 In addition to checking for typos, make sure this isn't an empty value.
 
-## Activity Popularity [/TCAPI/\_api/analyses/activity\_popularity{?descending}]
+## Activity Popularity [/TCAPI/_api/analyses/activity_popularity{?descending}]
 Activity Popularity allows you to determine the most and least popular
 activities based on the number of the activity occurences.
 
-### Activity Popularity Resource Attributes
+### Activity Popularity Attributes
 The returned resource is a list of objects with the properties "key", "id", and
 "value". "key" is the only important property.
 
@@ -78,7 +82,7 @@ The returned resource is a list of objects with the properties "key", "id", and
             }
         ]
 
-## Basic Results [/TCAPI/\_api/analyses/basic_results{?activity}]
+## Basic Results [/TCAPI/_api/analyses/basic_results{?activity}]
 In order to store information about measured outcomes, the optional
 ["result" property](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#result)
 is provided as part of an xAPI statement. While the value of this property
@@ -93,15 +97,16 @@ separately in its own resource as seen below.
 This resource provides information
 to the "Results Summary" in the WaxLRS interface.
 
-### Basic Results Resource Attributes
-+ list of objects with the following properties:
-    + key: list with the following items
-        + index 0: agent
-    + value: object with the following optional properties
-        + scaled: list of scaled scores
-        + raw: list of raw scores
-        + completion: list of booleans indicating completion of activity
-        + success: list of booleans indicating success in activity
+### Basic Results Attributes
+This resource returns a list of objects with the following properties:
+
++ key: list with the following items
+    + index 0: agent
++ value: object with the following optional properties
+    + scaled: list of scaled scores
+    + raw: list of raw scores
+    + completion: list of booleans indicating completion of activity
+    + success: list of booleans indicating success in activity
 
 ### Basic Results: Retrieval [GET]
 
@@ -135,10 +140,11 @@ to the "Results Summary" in the WaxLRS interface.
             },
         ]
 
-## Question Analysis [/TCAPI/\_api/analyses/questionanalysis{?activity}]
-Question Analysis analyzes the quality of questions and determines if they are conducive to the success of an assessment.
+## Question Analysis [/TCAPI/_api/analyses/questionanalysis{?activity}]
+Question Analysis analyzes the quality of questions and determines if they are
+conducive to the success of an assessment.
 
-### Question Analysis Resource Attributes
+### Question Analysis Attributes
 This resource returns a list of objects with the following properties:
 
 + key: a list with the following items:
@@ -196,7 +202,7 @@ This resource returns a list of objects with the following properties:
         ]
 
 
-## Responses [/TCAPI/\_api/analyses/responses{?activity}]
+## Responses [/TCAPI/_api/analyses/responses{?activity}]
 The "response" property is an optional property within the
 ["result" property](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#result)
 which allows for arbitrary text appropriate to the activity to be recorded.
@@ -243,14 +249,14 @@ This resource returns a list of response objects with the following properties:
             },
         ]
 
-## Scorechart [/TCAPI/\_api/analyses/scorechart{?activity}]
+## Scorechart [/TCAPI/_api/analyses/scorechart{?activity}]
 Like other referrences to 'score', scores correspond to the
 [result.score property](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#result)
 statement property. This resource provides a distribution of all scores for a
 given activity. As expected, this Scorechart resource provides information to
 the "Scorechart" report in the WaxLRS interface.
 
-### Scorechart Resource Attributes
+### Scorechart Attributes
 This resource returns an object with the following properties:
 
 + raw: object with raw scores and their total occurrences as key value pairs
@@ -282,11 +288,11 @@ pairs
           }
         }
 
-## Timeline [/TCAPI/\_api/analyses/timeline{?activity,agent,verb}]
+## Timeline [/TCAPI/_api/analyses/timeline{?activity,agent,verb}]
 The Timeline resource provides a way to find the number of occurrences for an
 activity during various time frames.
 
-### Timeline Resource Attributes
+### Timeline Attributes
 The resource returns a list of objects with the following properties:
 
 + key: a list in which each item corresponds to part of a single date
@@ -339,11 +345,11 @@ Only one of the parameters below can be used.
             }
         ]
 
-## Verb Cloud [/TCAPI/\_api/analyses/verbcloud{?activity,agent}]
+## Verb Cloud [/TCAPI/_api/analyses/verbcloud{?activity,agent}]
 The Verb Cloud provides the total number of occurrences of verbs for the given
 activity or agent.
 
-### Verb Cloud Resource Attributes
+### Verb Cloud Attributes
 This resource provides a list of objects with the following properties:
 
 + key: a list with one value, the verb id
@@ -382,7 +388,7 @@ Only one of the parameters below can be used.
         ]
 
 # Group Agent Mastery
-## Agent Mastery [/TCAPI/\_api/agent\_mastery{?agent}]
+## Agent Mastery [/TCAPI/_api/agent_mastery{?agent}]
 ???????????????
 'Mastery' refers to the Saltbox Mastery Index (SMI) which summarizes an
 individual's overall performance relative to peers. For example, an SMI score of 35%
@@ -391,7 +397,7 @@ individual's peers included in evaluation. Performance, in this case, refers to
 achievement in scorable activities as found in the `result.score` property
 of statements.
 
-### Agent Mastery Resource Attributes
+### Agent Mastery Attributes
 This resource returns an object with the following properties:
 
 + prediction: This is the SMI score formatted in decimals
@@ -428,9 +434,12 @@ This resource returns an object with the following properties:
 
 # Group Agent Objects
 ## Agent Objects [/TCAPI/_api/agents{?agent}]
-A list of full xAPI agents where 'full' means that an agent has the 'name'
-property if a name was ever associated (via statements) with the agent's inverse
-functional identifier (mbox, mbox_sha1sum, openid, account).
+This resource returns a list of full xAPI agents where 'full' means that an
+agent has the 'name' property if a name was ever associated (via statements)
+with the agent's inverse functional identifier (mbox, mbox_sha1sum, openid,
+account). This means that even if 99 statements were sent with the same agent
+but with no name, even if one statement was sent with the same identifier and
+with a name, this resource will be able to retrieve that name.
 
 ### TCAPI/_api/agents vs. TCAPI/agents
 This resource, `TCAPI/_api/agents`, is different from our `TCAPI/agents`
@@ -440,12 +449,11 @@ reasons you might use this resource is to retrieve the corresponding name for a
 a list of agents when the only information you have is each agent's mbox
 (email). #better example?
 
-### Agent Objects: Retrieval [GET]
-#### Notes
+### Notes
 Assuming properly formed parameters, this resource will, in the very least,
 return what you provide. For example, if you provide the agent parameter,
-`{"mbox":"mailto:nonexistent@example.org"}`, even when this agent doesn't exist in
-WaxLRS the response would still be:
+`{"mbox":"mailto:nonexistent@example.org"}`, even when this agent doesn't exist
+in WaxLRS the response would still be:
 
         [
             {
@@ -453,7 +461,23 @@ WaxLRS the response would still be:
             }
         ]
 
-??? why do we do this again?
+A likely scenario in which this behavior is useful would involve using the
+returned resource to compare agent information against external data or simply
+seeing which agents have names associated.
+
+For example, depending on how you submit statements, it is certainly possible
+that agents in the system do not have names since the `name` property is
+optional. However, if you consistently use the convention of including names,
+the returned list of unnamed agents is one possible indicator of who has been
+involved in any learning activity.
+
+Another example might involve combining the available information about agents
+in WaxLRS with information from a separate data source in which it is important
+to have as much information available about each agent between the two services.
+Having a returned list of the same length (with the same agents), could be
+easier to use.
+
+### Agent Objects: Retrieval [GET]
 
 + Parameters
 
@@ -472,8 +496,8 @@ WaxLRS the response would still be:
 
         [
             {
-                "mbox": "mailto:a28@example.org",
-                "name": "Alejandro Argo"
+                "mbox": "mailto:bauer@example.com",
+                "name": "Bauer Pauer"
             }
         ]
 
@@ -486,7 +510,7 @@ actors, verbs, activities, and statements within a specified time frame.
 If at least one statement is found within the provided time frame,
 an object with the following structure will be returned:
 
-#### Summary Resource Attributes
+#### Summary Attributes
 This resource returns an object with the following properties:
 
 + new: Object with properties: verb, statement, actor, activity
@@ -593,171 +617,6 @@ below.
             "most_active": {}
         }
 
-# Group Debugging
-## Debug Documents [/TCAPI/_api/debug/documents]
-### Debug Documents: Retrieval [GET]
-This API is intended for internal use by Saltbox but is not restricted to
-Saltbox.
-
-Debug documents are the most recent (within 24 hours) documents stored by the
-[Document APIs](http://docs.waxtcapi.apiary.io/#documentapis). This is useful
-because the Document APIs cannot retrieve documents by timestamp alone. For
-example, the
-[Agent Profile API](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#agentprofapi)
-requires an agent parameter when retrieving any
-documents and then optionally the `since` parameter can be included. As such,
-the debug documents provide the quickest access to recently stored documents.
-This in turn allows you to perform any debugging related to documents if needed.
-
-In the example below, one of the agent_profile documents has the id set to
-"e12d6f90-2a3f-4b53-8ce5-d307e4c20f4b". Using this id and its corresponding
-agent as parameters, you can use the
-[Agent Profile API](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#agentprofapi)
-to retrieve the specific document.
-
-### Debug Document Attributes
-As seen below, this resource returns an object with the single "documents"
-property. Within this property's value, you can find a list of all the
-documents that fall under the three different document types: agent profile,
-activity profile, and state.
-
-+ Request
-
-    + Headers
-
-            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
-
-+ Response 200
-
-        {
-            "documents": {
-                "agent_profile": [
-                    {
-                        "timestamp": "2014-02-18T23:31:08Z",
-                        "document\_type": "agent_profile",
-                        "identifier": "",
-                        "agent": {
-                            "mbox": "mailto:secret\_agent_man@example.com"
-                        }
-                    },
-                    {
-                        "timestamp": "2014-02-18T23:30:26Z",
-                        "document\_type": "agent_profile",
-                        "identifier": "e12d6f90-2a3f-4b53-8ce5-d307e4c20f4b",
-                        "agent": {
-                            "mbox": "mailto:agent_q@example.com"
-                        }
-                    }
-                ],
-                "activity_profile": [
-                    {
-                        "timestamp": "2014-02-18T23:31:05Z",
-                        "document\_type": "activity_profile",
-                        "identifier": "",
-                        "activity_id": "urn:a:b"
-                    },
-                    {
-                        "timestamp": "2014-02-18T23:30:24Z",
-                        "document\_type": "activity_profile",
-                        "identifier": "4dd3abfc-29b8-492f-a5e6-e72a7a9500de",
-                        "activity_id": "urn:a:b"
-                    }
-                ],
-                "state": [
-                    {
-                        "timestamp": "2014-02-18T23:31:26Z",
-                        "activity_id": "http://example.com/activity",
-                        "identifier": "1ee237p23e68114b9705e33912058a78",
-                        "agent": {
-                            "mbox": "mailto:lightningcatsho@example.com"
-                        },
-                        "document_type": "state"
-                    },
-                    {
-                        "timestamp": "2014-02-18T23:31:23Z",
-                        "activity_id": "http://example.com/activity",
-                        "identifier": "94702a52b49341f0b3530a2e6fcd6555",
-                        "agent": {
-                            "mbox": "mailto:person@example.com"
-                        },
-                        "document_type": "state"
-                    }
-                ]
-            }
-        }
-
-## Debug xAPI [/TCAPI/_api/debug/xapi{?iterator,sequence}]
-This API is intended for internal use by Saltbox but is not restricted to
-Saltbox.
-
-The Debug xAPI API allows you to retrieve the most recent (within 24 hours)
-errors related to the various xAPI APIs (Statement and Document APIs).
-
-## Debug xAPI: Retrieval [GET]
-### Debug xAPI Resource Attributes
-
-+ messages
-    + status: the HTTP responsen code
-    + received: timestamp of when the error occurred
-    + parameters: an object of parameters sent as part of the request to the API
-    + url: the API endpoint
-    + explanation: The error message displayed to the API user, which is different than what is logged to Saltbox logging services
-    + site: the site/account name of the person using this API
-    + api: the name of the API being examined
-    + verb: the HTTP verb
-    + id: ?
-+ iterator: The Amazon Kinesis iterator that iterates the stream of errors
-
-### Notes
-While this API can take the `iterator` and `sequence` parameters as described
-below. These typically will not be needed and are set by Amazon.
-
-+ Parameters
-
-    + iterator (optional, string) ... Kinesis Iterator found by GET-ing this
-    resource without parameters
-    + sequence (optional, string) ... Sequence value found as a query parameter
-    in the returned iterator url
-
-+ Request
-
-    + Headers
-
-            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
-
-+ Response 200
-
-        {
-            "messages": [
-                {
-                    "status": 400,
-                    "received": "2014-02-21T18:50:09Z",
-                    "parameters": {
-
-                    },
-                    "url": "http://youraccount.waxlrs.com/TCAPI/_api/mastery/agent",
-                    "explanation": "Missing required parameters:\n                agent",
-                    "site": "youraccount",
-                    "api": "agent_mastery",
-                    "verb": "GET",
-                    "id": "fcegb2919b2811e3803f887529182736"
-                },
-                {
-                    "status": 400,
-                    "received": "2014-02-21T18:51:12Z",
-                    "parameters": {
-
-                    },
-                    "url": "http://oneofyoursubaccounts.waxlrs.com/TCAPI/_api/mastery/agent",
-                    "explanation": "Missing required parameters:\n                agent",
-                    "site": "oneofyoursubaccounts",
-                    "api": "agent_mastery",
-                    "verb": "GET",
-                    "id": "2291b99e9b2911e3a54c93028472812"
-                }
-            ],
-            "iterator": "http://youraccount.waxlrs.com/TCAPI/_api/debug/xapi?iterator=longamazonkinesisiterator&sequence=sequencevalue"
-        }
 
 # Group Accounts Management
 The resources below are part of our Accounts Management API which allow for
@@ -770,24 +629,38 @@ processes and information are handled through the main account.
 ## Subaccounts
 ### Description of Usual Server Responses
 
-`200 OK` \- A successful request: you were able to retrieve subaccounts or
+`200 OK`
+
++ A successful request: you were able to retrieve subaccounts or
 create a new one
-`400 Bad Request` \- The request could not be understood or was missing required
+
+`400 Bad Request`
+
++ The request could not be understood or was missing required
 information
-- "An email is required to request a password reset link but was not provided"
-- "Malformed reset token", this may have resulted from copy and pasting the
++ "An email is required to request a password reset link but was not provided"
++ "Malformed reset token", this may have resulted from copy and pasting the
 password reset link incorrectly
-`403 Forbidden` \- This is most likely because the reset password token is
+
+`403 Forbidden`
+
++ This is most likely because the reset password token is
 expired
-- "Expired reset token"
-`404 Not Found` \- make sure you wrote out the endpoint/link correctly,
++ "Expired reset token"
+
+`404 Not Found`
+
++ make sure you wrote out the endpoint/link correctly,
 otherwise you may be requesting a subaccount that does not exist
-- "Subaccount, {subaccountsitename}, does not exist."
-- "Only letters and numbers are allowed", this message occurs when creating a
++ "Subaccount, {subaccountsitename}, does not exist."
++ "Only letters and numbers are allowed", this message occurs when creating a
 subaccount with an invalid site name
-- `409 Conflict` \- You are attempting to create a subaccount with a site name
+
+`409 Conflict`
+
++ You are attempting to create a subaccount with a site name
 that already exists
-- "That name is already in use"
++ "That name is already in use"
 
 ### Subaccounts [/TCAPI/_api/accounts/subaccounts]
 ### Retrieve subaccounts [GET]
@@ -805,14 +678,14 @@ credentials url, and OAuth credentials url
             {
                 "site": "yearnin4elearnin",
                 "url": "https://yearnin4elearnin.waxlrs.com",
-                "basic\_credentials": "https://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/yearnin4elearnin/credentials/basic",
-                "oauth\_credentials": "https://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/yearnin4elearnin/credentials/oauth"
+                "basic_credentials": "https://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/yearnin4elearnin/credentials/basic",
+                "oauth_credentials": "https://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/yearnin4elearnin/credentials/oauth"
             },
             {
                 "site": "readersareleaders",
                 "url": "https://readersareleaders.waxlrs.com",
-                "basic\_credentials": "https://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/readersareleaders/credentials/basic",
-                "oauth\_credentials": "http://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/readersareleaders/credentials/oauth"
+                "basic_credentials": "https://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/readersareleaders/credentials/basic",
+                "oauth_credentials": "http://elearningorg.waxlrs.com/TCAPI/_api/accounts/subaccounts/readersareleaders/credentials/oauth"
             }
         ]
 
@@ -925,13 +798,13 @@ Retrieve all OAuth credentials for specified subaccount
         {
             "oauth_credentials": [
                 {
-                    "consumer\_key": "WGQ17ukZHstLfNo1HwXT",
-                    "secret\_key": "iSe4BOHtByYWXyuZWxFx",
+                    "consumer_key": "WGQ17ukZHstLfNo1HwXT",
+                    "secret_key": "iSe4BOHtByYWXyuZWxFx",
                     "created": "2013-09-23T20:41:44.316602Z"
                 },
                 {
-                    "consumer\_key": "9gMaMUrwEeWCLEwwcYCm",
-                    "secret\_key": "KSRNCMZ6QUKLuJlpjyge",
+                    "consumer_key": "9gMaMUrwEeWCLEwwcYCm",
+                    "secret_key": "KSRNCMZ6QUKLuJlpjyge",
                     "created": "2013-09-23T20:43:09.311111Z"
                 }
             ]
@@ -949,10 +822,10 @@ Generate OAuth credential for specified subaccount
 + Response 200 (application/json)
 
         {
-            "consumer\_key": "WGQ17ukZHstLfNo1HwXT", "secret\_key": "iSe4BOHtByYWXyuZWxFx", "created": "2013-09-23T20:41:44.316602Z"
+            "consumer_key": "WGQ17ukZHstLfNo1HwXT", "secret_key": "iSe4BOHtByYWXyuZWxFx", "created": "2013-09-23T20:41:44.316602Z"
         }
 
-## Site Admins [/TCAPI/\_api/accounts/subaccounts/{subaccountsitename}/reset_password?email={email}]
+## Site Admins [/TCAPI/_api/accounts/subaccounts/{subaccountsitename}/reset_password?email={email}]
 When a subaccount user has lost or forgotten their password, this request can be
 used to generate a reset password link. Each link is unique to the email that is
 sent as a parameter in the request. Upon visiting this link, a user can enter a
@@ -981,4 +854,170 @@ Generate reset password link for specified subaccount
 
         {
             "reset_link": "https://yearnin4elearnin.waxlrs.com/reset?token=WyJleGFtcGxlIiwiYmF0ZmxlY2tAZXhhbXBsZS5jb20iXQ.BSJvDg.WJzyeRFbOTjkr37j6W2a8lSRisE"
+        }
+
+# Group Debugging
+The Debugging APIs were originally intended for internal use by Saltbox but are
+not restricted to Saltbox.
+
+## Debug Documents [/TCAPI/_api/debug/documents]
+Debug documents are the most recent (within 24 hours) documents stored by the
+[Document APIs](http://docs.waxtcapi.apiary.io/#documentapis). This is useful
+because the Document APIs cannot retrieve documents by timestamp alone. For
+example, the
+[Agent Profile API](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#agentprofapi)
+requires an agent parameter when retrieving any
+documents and then optionally the `since` parameter can be included. As such,
+the debug documents provide the quickest access to recently stored documents.
+This in turn allows you to perform any debugging related to documents if needed.
+
+In the example below, one of the agent_profile documents has the id set to
+"e12d6f90-2a3f-4b53-8ce5-d307e4c20f4b". Using this id and its corresponding
+agent as parameters, you can use the
+[Agent Profile API](https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#agentprofapi)
+to retrieve the specific document.
+
+### Debug Document Attributes
+As seen in this resource's response, this resource returns an object with the
+single "documents" property. Within this property's value, you can find a list
+of all the documents that fall under the three different document types: agent
+profile, activity profile, and state during the last 24 hours.
+
+### Debug Documents: Retrieval [GET]
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200
+
+        {
+            "documents": {
+                "agent_profile": [
+                    {
+                        "timestamp": "2014-02-18T23:31:08Z",
+                        "document_type": "agent_profile",
+                        "identifier": "",
+                        "agent": {
+                            "mbox": "mailto:secret_agent_man@example.com"
+                        }
+                    },
+                    {
+                        "timestamp": "2014-02-18T23:30:26Z",
+                        "document_type": "agent_profile",
+                        "identifier": "e12d6f90-2a3f-4b53-8ce5-d307e4c20f4b",
+                        "agent": {
+                            "mbox": "mailto:agent_q@example.com"
+                        }
+                    }
+                ],
+                "activity_profile": [
+                    {
+                        "timestamp": "2014-02-18T23:31:05Z",
+                        "document_type": "activity_profile",
+                        "identifier": "",
+                        "activity_id": "urn:a:b"
+                    },
+                    {
+                        "timestamp": "2014-02-18T23:30:24Z",
+                        "document_type": "activity_profile",
+                        "identifier": "4dd3abfc-29b8-492f-a5e6-e72a7a9500de",
+                        "activity_id": "urn:a:b"
+                    }
+                ],
+                "state": [
+                    {
+                        "timestamp": "2014-02-18T23:31:26Z",
+                        "activity_id": "http://example.com/activity",
+                        "identifier": "1ee237p23e68114b9705e33912058a78",
+                        "agent": {
+                            "mbox": "mailto:lightningcatsho@example.com"
+                        },
+                        "document_type": "state"
+                    },
+                    {
+                        "timestamp": "2014-02-18T23:31:23Z",
+                        "activity_id": "http://example.com/activity",
+                        "identifier": "94702a52b49341f0b3530a2e6fcd6555",
+                        "agent": {
+                            "mbox": "mailto:person@example.com"
+                        },
+                        "document_type": "state"
+                    }
+                ]
+            }
+        }
+
+## Debug xAPI [/TCAPI/_api/debug/xapi{?iterator,sequence}]
+The Debug xAPI API allows you to retrieve the most recent (within 24 hours)
+errors related to the various xAPI APIs (Statement and Document APIs).
+
+### Debug xAPI Attributes
+
++ messages
+    + status: the HTTP responsen code
+    + received: timestamp of when the error occurred
+    + parameters: an object of parameters sent as part of the request to the API
+    + url: the API endpoint
+    + explanation: The error message displayed to the API user, which is
+    different than what is logged to Saltbox logging services
+    + site: the site/account name of the person using this API
+    + api: the name of the API being examined
+    + verb: the HTTP verb
+    + id: ?
++ iterator: The Amazon Kinesis iterator that iterates the stream of errors
+
+### Notes
+While this API can take the `iterator` and `sequence` parameters as described
+below. These typically will not be needed and are set by Amazon.
+
+## Debug xAPI: Retrieval [GET]
+
++ Parameters
+
+    + iterator (optional, string) ... Kinesis Iterator found by GET-ing this
+    resource without parameters
+    + sequence (optional, string) ... Sequence value found as a query parameter
+    in the returned iterator url
+
++ Request
+
+    + Headers
+
+            Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQZQ
+
++ Response 200
+
+        {
+            "messages": [
+                {
+                    "status": 400,
+                    "received": "2014-02-21T18:50:09Z",
+                    "parameters": {
+
+                    },
+                    "url": "http://youraccount.waxlrs.com/TCAPI/_api/mastery/agent",
+                    "explanation": "Missing required parameters:n                agent",
+                    "site": "youraccount",
+                    "api": "agent_mastery",
+                    "verb": "GET",
+                    "id": "fcegb2919b2811e3803f887529182736"
+                },
+                {
+                    "status": 400,
+                    "received": "2014-02-21T18:51:12Z",
+                    "parameters": {
+
+                    },
+                    "url": "http://oneofyoursubaccounts.waxlrs.com/TCAPI/_api/mastery/agent",
+                    "explanation": "Missing required parameters:n                agent",
+                    "site": "oneofyoursubaccounts",
+                    "api": "agent_mastery",
+                    "verb": "GET",
+                    "id": "2291b99e9b2911e3a54c93028472812"
+                }
+            ],
+            "iterator": "http://youraccount.waxlrs.com/TCAPI/_api/debug/xapi?iterator=longamazonkinesisiterator&sequence=sequencevalue"
         }
